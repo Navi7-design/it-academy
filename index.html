@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IT ACADEMY</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.447.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{--bg:#080B14;--card:#151D2E;--a:#5685FF;--v:#8B6CFF;--t:#35D6C5;--tx:#F2F5FF;--mut:#8D99B8;--line:#26314a;--red:#ff5c7c;--g:linear-gradient(135deg,#5685FF,#8B6CFF)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 Inter,system-ui,"Segoe UI",sans-serif;min-height:100vh;overflow-x:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+body::before,body::after{content:"";position:fixed;width:540px;height:540px;border-radius:50%;filter:blur(120px);opacity:.28;pointer-events:none;animation:fl 18s ease-in-out infinite alternate}
+body::before{background:var(--v);top:-180px;left:-140px}body::after{background:var(--t);bottom:-220px;right:-160px;animation-delay:-9s}
+@keyframes fl{to{transform:translate(70px,50px) scale(1.2)}}@keyframes pop{from{opacity:0;transform:translateY(12px)}}@keyframes spin{to{transform:rotate(360deg)}}
+.load{display:grid;place-items:center;height:100vh}.spin{width:42px;height:42px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--a);animation:spin .8s linear infinite}
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+.side{width:236px;flex:none;padding:18px 12px;border-right:1px solid var(--line);background:#0b1020cc;backdrop-filter:blur(16px);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.main{flex:1;min-width:0;padding:22px;max-width:1180px;animation:pop .45s both}
+.logo{font-weight:900;font-size:21px;letter-spacing:.5px;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent;padding:4px 10px 14px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:var(--mut);cursor:pointer;border:0;background:none;font:inherit;text-align:left;transition:.2s;width:100%}
+.nav:hover{color:var(--tx);background:#ffffff0d}.nav.on{color:#fff;background:linear-gradient(135deg,#5685ff33,#8b6cff33);box-shadow:inset 0 0 0 1px #5685ff66,0 0 18px #5685ff33}
+.nav svg{width:18px;height:18px;flex:none}
+.card{background:linear-gradient(180deg,#ffffff0a,#ffffff03),var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;backdrop-filter:blur(14px);animation:pop .45s both;transition:.25s}
+.card:hover{border-color:#5685ff66;box-shadow:0 0 24px #5685ff1f}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:17px;margin:0 0 12px}.mut{color:var(--mut);font-size:13px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.st b{display:block;font-size:30px;margin-top:6px;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}.st svg{color:var(--t)}
+input,select,textarea,button{font:inherit}
+input,select,textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:#0d1424;color:var(--tx);outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--a);box-shadow:0 0 0 3px #5685ff44}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+button.b{cursor:pointer;border:0;border-radius:12px;padding:10px 16px;color:#fff;font-weight:700;background:var(--g);transition:.2s;display:inline-flex;align-items:center;gap:6px}
+button.b:hover{transform:translateY(-2px);box-shadow:0 8px 24px #5685ff66}button.b:active{transform:scale(.96)}
+button.gh{background:#ffffff12}button.rd{background:linear-gradient(135deg,#ff5c7c,#ff8a5c)}button.sm{padding:6px 10px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:130px}.row>.n{flex:none;min-width:0}
+table{width:100%;border-collapse:collapse}td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase}
+.tbl{overflow-x:auto}.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;background:#35d6c522;color:var(--t)}.pill.r{background:#ff5c7c22;color:var(--red)}.pill.y{background:#8b6cff22;color:#b8a6ff}
+.bar{height:9px;border-radius:9px;background:#ffffff14;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--t));border-radius:9px;transition:width .8s}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;flex:none;box-shadow:0 0 16px #5685ff66}
+.seg{display:inline-flex;background:#ffffff0d;border-radius:12px;padding:3px}.seg button{border:0;background:none;color:var(--mut);padding:7px 14px;border-radius:9px;cursor:pointer;font:inherit}.seg button.on{background:var(--g);color:#fff}
+.modal{position:fixed;inset:0;background:#000a;backdrop-filter:blur(6px);display:grid;place-items:center;z-index:50;padding:14px;overflow:auto}.modal .card{width:100%;max-width:520px;margin:0}
+#toast{position:fixed;right:14px;bottom:14px;z-index:99;display:flex;flex-direction:column;gap:8px}.tt{background:#151d2eee;border:1px solid var(--a);border-radius:14px;padding:12px 16px;animation:pop .3s;box-shadow:0 0 20px #5685ff44;max-width:320px}.tt.e{border-color:var(--red)}
+.auth{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:18px}.auth .card{width:100%;max-width:410px;padding:28px}.auth .logo{font-size:30px;text-align:center;padding-bottom:4px}
+.err{color:var(--red);min-height:20px;font-size:13px;margin-top:8px}.link{color:var(--a);cursor:pointer;font-size:13px}
+.ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--a) calc(var(--p)*1%),#ffffff14 0);box-shadow:0 0 28px #5685ff44}.ring span{width:84px;height:84px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:28px;font-weight:800}
+.ach{opacity:.4;filter:grayscale(1)}.ach.ok{opacity:1;filter:none;box-shadow:0 0 22px #8b6cff44}
+canvas{max-height:300px}
+@media(max-width:860px){.shell{flex-direction:column}.side{width:100%;height:auto;position:sticky;z-index:5;flex-direction:row;overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line)}.logo{display:none}.nav{width:auto;white-space:nowrap;flex:none}.main{padding:14px}}
+.tag{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t);padding:0 12px 10px}
+.seg{flex-wrap:wrap}
+@media(max-width:860px){.tag{display:none}}
+@media(max-width:480px){h1{font-size:21px}.main{padding:12px 10px}.card{padding:14px;border-radius:16px}.modal{align-items:start}td,th{padding:8px 5px;font-size:13px}.grid.g4{grid-template-columns:repeat(2,1fr)}.st b{font-size:24px}}
+</style>
+</head>
+<body>
+<div id="app"><div class="load"><div class="spin"></div></div></div><div id="toast"></div>
+<script>
+/* ====== НАЛАШТУВАННЯ: Supabase → Project Settings → API (лише anon/publishable key!) ====== */
+const SUPABASE_URL='PASTE_SUPABASE_URL', SUPABASE_ANON_KEY='PASTE_ANON_KEY';
+/* ================================================================================== */
+const $=(s,e=document)=>e.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0,f1=n=>(+n).toFixed(1),dstr=o=>new Date(Date.now()-o*864e5-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10),ld=s=>new Date(new Date(s)-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const PD={week:7,month:30,semester:182,year:365},PN={week:'Тиждень',month:'Місяць',semester:'Семестр',year:'Рік'};
+const NAV=[['dash','layout-dashboard','Dashboard'],['grades','book-open-check','Оцінки'],['subjects','library','Предмети'],['progress','line-chart','Мій прогрес'],['prod','zap','Продуктивність'],['ach','trophy','Досягнення'],['profile','user-round','Профіль'],['settings','settings','Налаштування']];
+const ANAV=[['overview','gauge','Overview'],['users','users','Користувачі'],['moderators','shield-check','Модератори'],['bans','ban','Блокування'],['rating','crown','Рейтинг'],['analytics','bar-chart-3','Аналітика'],['live','radio','Live Activity'],['ann','megaphone','Оголошення'],['msgs','mail','Повідомлення'],['audit','scroll-text','Журнал'],['asettings','settings','Налаштування']];
+const MNAV=[['overview','gauge','Огляд'],['users','users','Користувачі'],['history','history','Історія дій'],['settings','settings','Налаштування']];
+const EV={register:'зареєструвався(лась)',login:'увійшов(ла)',grade_add:'додав(ла) оцінку',grade_edit:'змінив(ла) оцінку',profile_update:'оновив(ла) профіль',goal_add:'створив(ла) ціль'};
+let sb,S={u:null,p:null,subs:[],gr:[],goals:[],ann:[],msg:[],per:'month',cf:{},rec:false},A={pr:[],gr:[],gl:[],ev:[],bn:[],au:[],ms:[],sb:[],loaded:false},charts=[],hb=null,rt={};
+const toast=(m,e)=>{const t=document.createElement('div');t.className='tt'+(e?' e':'');t.textContent=m;$('#toast').append(t);setTimeout(()=>t.remove(),4200)};
+const icons=()=>lucide.createIcons();
+const isAdm=()=>S.p&&S.p.role==='admin',isMod=()=>S.p&&S.p.role==='moderator',isStaff=()=>isAdm()||isMod();
+const ROLE={admin:'Адмін',moderator:'Модератор',user:'Користувач'};
+const isBl=p=>!!p&&p.blocked&&(!p.blocked_until||new Date(p.blocked_until)>Date.now());
+const fdt=s=>s?new Date(s).toLocaleString('uk',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+const homeRoute=()=>isAdm()?'a-overview':isMod()?'m-overview':'dash';
+const okRoute=r=>!(r.startsWith('a-')&&!isAdm())&&!(r.startsWith('m-')&&!isMod());
+const banMsg=h=>'Акаунт заблоковано'+(h&&h.reason?'. Причина: '+h.reason:'')+(h&&h.until?'. Діє до '+fdt(h.until):'. Безстроково');
+const sname=id=>(S.subs.find(s=>s.id===id)||{}).name||'—';
+
+/* ---------- метрики ---------- */
+const goalP=(g,gr)=>Math.min(100,Math.round((g.kind==='avg'?avg(gr.map(x=>x.value)):gr.length)/g.target*100));
+const prodIdx=(gr,gl)=>Math.round(avg(gr.map(x=>x.value))/12*40+Math.min(gr.filter(x=>x.date>dstr(14)).length,8)/8*30+(gl.length?gl.filter(g=>goalP(g,gr)>=100).length/gl.length*30:0));
+const win=(gr,n,k)=>gr.filter(g=>g.date>dstr(n*(k+1))&&g.date<=dstr(n*k));
+const bucket=(d,p)=>{if(p==='week'||p==='month')return d;const x=new Date(d);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x.toISOString().slice(0,10)};
+const group=(gr,key)=>{const m={};gr.forEach(g=>(m[key(g)]??=[]).push(g.value));return m};
+const ACH=[['🎯','Перша оцінка',(gr)=>gr.length>=1],['📚','10 оцінок',gr=>gr.length>=10],['🏗️','50 оцінок',gr=>gr.length>=50],['💎','Дванадцятка',gr=>gr.some(g=>g.value===12)],['🧠','Середній ≥ 10 (5+ оцінок)',gr=>gr.length>=5&&avg(gr.map(x=>x.value))>=10],['🗂️','5 предметів',(gr,gl,s)=>s.length>=5],['🏁','Ціль виконано',(gr,gl)=>gl.some(g=>goalP(g,gr)>=100)],['⚡','Продуктивність ≥ 70',(gr,gl)=>prodIdx(gr,gl)>=70]];
+function mkChart(id,cfg){const c=$('#'+id);if(!c)return;cfg.options=Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8D99B8'}}},scales:cfg.type==='doughnut'?{}:{x:{ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},y:{ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'},beginAtZero:true}}},cfg.options||{});charts.push(new Chart(c,cfg))}
+const cv=(id,h=260)=>`<div style="height:${h}px"><canvas id="${id}"></canvas></div>`;
+const grad=c=>`linear-gradient(135deg,${c},#8B6CFF)`;
+
+/* ---------- старт / авторизація ---------- */
+if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><p class="mut">Вкажіть SUPABASE_URL і SUPABASE_ANON_KEY на початку скрипта в index.html та виконайте schema.sql у Supabase.</p></div></div>'}
+else{sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){S.rec=true;recoverView()}});boot()}
+
+function authView(msg,mode='in'){
+ charts=[];const reg=mode==='up',rst=mode==='rs';
+ $('#app').innerHTML=`<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><p class="mut" style="text-align:center;margin:0 0 14px">${rst?'Відновлення пароля':reg?'Створіть акаунт':'Вхід до кабінету'}</p>
+ ${reg?'<label>Ім’я</label><input id="nm" autocomplete="name">':''}<label>Email</label><input id="em" type="email" autocomplete="email">
+ ${rst?'':'<label>Пароль</label><input id="pw" type="password" autocomplete="'+(reg?'new':'current')+'-password" placeholder="мінімум 8 символів">'}
+ <div class="err" id="er">${esc(msg||'')}</div>
+ <button class="b" style="width:100%;justify-content:center" onclick="${rst?'doReset()':reg?'doReg()':'doLogin()'}">${rst?'Надіслати лист':reg?'Зареєструватись':'Увійти'}</button>
+ <p style="text-align:center;margin:14px 0 0" class="mut">${reg||rst?'<span class="link" onclick="authView(0)">Вже є акаунт? Увійти</span>':'<span class="link" onclick="authView(0,\'up\')">Реєстрація</span> · <span class="link" onclick="authView(0,\'rs\')">Забули пароль?</span>'}</p></div></div>`;
+ ['em','pw','nm'].forEach(i=>$('#'+i)&&$('#'+i).addEventListener('keydown',e=>e.key==='Enter'&&$('.auth .b').click()))}
+const er=m=>$('#er').textContent=m;
+async function doLogin(){const{error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(error)return er(error.message);await boot(true)}
+async function doReg(){const pw=$('#pw').value;if(pw.length<8)return er('Пароль мінімум 8 символів');const{data,error}=await sb.auth.signUp({email:$('#em').value.trim(),password:pw,options:{data:{name:$('#nm').value.trim()}}});if(error)return er(error.message);if(!data.session)return authView('Перевірте пошту й підтвердіть email, потім увійдіть.');await boot(true,'register')}
+async function doReset(){const{error}=await sb.auth.resetPasswordForEmail($('#em').value.trim(),{redirectTo:location.href.split('#')[0]});er(error?error.message:'Лист для відновлення надіслано ✔')}
+function recoverView(){$('#app').innerHTML=`<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><label>Новий пароль</label><input id="pw" type="password"><div class="err" id="er"></div><button class="b" style="width:100%;justify-content:center" onclick="newPw()">Зберегти</button></div></div>`}
+async function newPw(){const p=$('#pw').value;if(p.length<8)return er('Мінімум 8 символів');const{error}=await sb.auth.updateUser({password:p});if(error)return er(error.message);S.rec=false;toast('Пароль змінено');boot()}
+async function reset(){clearInterval(hb);clearInterval(S.tk);hb=S.tk=null;await sb.removeAllChannels();rt={};S.u=S.p=null;S.subs=[];S.gr=[];S.goals=[];S.ann=[];S.msg=[];S.cf={};A={pr:[],gr:[],gl:[],ev:[],bn:[],au:[],ms:[],sb:[],loaded:false};location.hash=''}
+async function logout(){await sb.auth.signOut();await reset();authView()}
+async function kick(h){await sb.auth.signOut();await reset();authView(banMsg(h))}
+
+async function boot(fresh,first){
+ const{data:{session}}=await sb.auth.getSession();if(!session)return authView();if(S.rec)return recoverView();
+ S.u=session.user;
+ const{data:h,error:he}=await sb.rpc('heartbeat');
+ if(he)return authView('Помилка бази: '+he.message+' — виконайте актуальний schema.sql');
+ if(h&&h.blocked){await sb.auth.signOut();await reset();return authView(banMsg(h))}
+ const{data:p}=await sb.from('profiles').select('*').eq('id',S.u.id).single();
+ if(!p){await sb.auth.signOut();await reset();return authView('Профіль не знайдено.')}
+ S.p=p;await load();if(fresh)log(first||'login');
+ startHB();subAll();
+ if(fresh||!location.hash||!okRoute(location.hash.slice(2)))location.hash='#/'+homeRoute();
+ go()}
+function startHB(){if(hb)return;
+ hb=setInterval(async()=>{const{data:h}=await sb.rpc('heartbeat');if(!h||!S.p)return;if(h.blocked)return kick(h);if(h.role!==S.p.role){S.p.role=h.role;A.loaded=false;location.hash='#/'+homeRoute();go()}},45e3);
+ S.tk=setInterval(()=>{S.p&&isStaff()&&softRefresh()},3e4)}
+function subAll(){subSelf();subAnn();if(isStaff())subStaff()}
+function subSelf(){if(rt.self)return;
+ rt.self=sb.channel('me').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+S.u.id},async x=>{
+  const n=x.new;if(isBl(n)){const{data:h}=await sb.rpc('heartbeat');return kick(h||{until:n.blocked_until})}
+  if(n.role!==S.p.role){Object.assign(S.p,n);A.loaded=false;await sb.removeAllChannels();rt={};subAll();toast('Вашу роль змінено: '+ROLE[n.role]);location.hash='#/'+homeRoute();go()}else Object.assign(S.p,n)})
+ .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'to_id=eq.'+S.u.id},x=>{S.msg.unshift(x.new);toast('✉️ '+x.new.title);if(/dash|overview/.test(location.hash))go()}).subscribe()}
+function subAnn(){if(rt.ann)return;
+ rt.ann=sb.channel('ann').on('postgres_changes',{event:'INSERT',schema:'public',table:'announcements'},x=>{if(S.ann.some(a=>a.id===x.new.id))return;S.ann.unshift(x.new);toast('📢 '+x.new.title);if(/dash|overview|ann/.test(location.hash))go()}).subscribe()}
+function subStaff(){if(rt.staff)return;
+ const up=()=>{clearTimeout(S.pt);S.pt=setTimeout(softRefresh,1200)};
+ let ch=sb.channel('staff')
+ .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},x=>{const i=A.pr.findIndex(p=>p.id===x.new.id);if(i>=0)A.pr[i]=x.new;else A.pr.unshift(x.new);up()})
+ .on('postgres_changes',{event:'INSERT',schema:'public',table:'profiles'},x=>{if(!A.pr.some(p=>p.id===x.new.id))A.pr.unshift(x.new);up()})
+ .on('postgres_changes',{event:'INSERT',schema:'public',table:'audit_log'},()=>{clearTimeout(S.pa);S.pa=setTimeout(async()=>{await staffReload();if(!$('.modal'))go()},900)});
+ if(isAdm())ch=ch.on('postgres_changes',{event:'INSERT',schema:'public',table:'events'},x=>{A.ev.unshift(x.new);clearTimeout(S.pe);S.pe=setTimeout(()=>{if(/a-live|a-overview/.test(location.hash))go()},1500)});
+ rt.staff=ch.subscribe()}
+function updOnline(){const u=isAdm()?A.pr:A.pr.filter(p=>p.role==='user'),on=u.filter(online).length;if($('#sOn'))$('#sOn').textContent=on;if($('#sOff'))$('#sOff').textContent=u.length-on}
+function softRefresh(){if(/users|moderators|bans/.test(location.hash)&&!$('.modal'))go();updOnline()}
+const log=()=>Promise.resolve(); // Події навчальних дій записуються серверними тригерами в schema.sql.
+async function load(){const q=t=>sb.from(t).select('*').eq('user_id',S.u.id);
+ const[s,g,gl,an,ms]=await Promise.all([q('subjects').order('name'),q('grades').order('date',{ascending:false}),q('goals').order('created_at'),sb.from('announcements').select('*').order('created_at',{ascending:false}).limit(30),sb.from('messages').select('*').eq('to_id',S.u.id).order('created_at',{ascending:false}).limit(20)]);
+ [s,g,gl,an,ms].forEach(r=>r.error&&toast(r.error.message,1));S.subs=s.data||[];S.gr=g.data||[];S.goals=gl.data||[];S.ann=an.data||[];S.msg=ms.data||[]}
+
+
+/* ---------- роутер ---------- */
+window.addEventListener('hashchange',()=>S.p&&go());
+async function go(){
+ charts.forEach(c=>c.destroy());charts=[];let r=location.hash.replace('#/','')||homeRoute();if(!okRoute(r))r=homeRoute();
+ const mode=r.startsWith('a-')?'a':r.startsWith('m-')?'m':'u',key=mode==='u'?r.split('/')[0]:r.slice(2),pre={a:'a-',m:'m-',u:''}[mode];
+ if(mode!=='u'&&!A.loaded)await(mode==='a'?loadAdmin():loadMod());
+ const V={a:AV,m:MV,u:SV}[mode],nav={a:ANAV,m:MNAV,u:NAV}[mode],fn=V[key]||V[mode==='u'?'dash':'overview'];
+ let html;try{html=fn(r.split('/')[1])}catch(e){console.error(e);html=['<div class="card">Помилка відображення: '+esc(e.message)+'</div>']}
+ const alt=mode!=='u'?['dash','Кабінет учня','graduation-cap']:isAdm()?['a-overview','Адмінпанель','shield-check']:isMod()?['m-overview','Панель модератора','shield']:null;
+ $('#app').innerHTML=`<div class="shell"><aside class="side"><div class="logo">IT ACADEMY</div><div class="tag">${{a:'NAVI Admin',m:'Moderator',u:'Student'}[mode]}</div>${nav.map(n=>`<button class="nav ${n[0]===key||(key==='subject'&&n[0]==='subjects')?'on':''}" onclick="location.hash='#/${pre}${n[0]}'"><i data-lucide="${n[1]}"></i>${n[2]}</button>`).join('')}
+ <div style="flex:1"></div>${alt?`<button class="nav" onclick="location.hash='#/${alt[0]}'"><i data-lucide="${alt[2]}"></i>${alt[1]}</button>`:''}<button class="nav" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></aside><main class="main">${html[0]}</main></div>`;
+ icons();html[1]&&html[1]()}
+const rerender=()=>go();
+const stat=(i,v,l,id)=>`<div class="card st"><i data-lucide="${i}"></i><b${id?` id="${id}"`:''}>${v}</b><span class="mut">${l}</span></div>`;
+const avatar=(p,s=44)=>`<div class="av" style="width:${s}px;height:${s}px;background:${grad(p.avatar||'#5685FF')}">${esc((p.name||p.email||'?')[0].toUpperCase())}</div>`;
+const gradeRow=(g,act)=>`<tr><td>${g.date}</td><td>${esc(sname(g.subject_id))}</td><td><span class="pill ${g.value<7?'r':g.value>=10?'':'y'}">${g.value}</span></td><td class="mut">${esc(g.comment)}</td>${act?`<td style="white-space:nowrap"><button class="b gh sm" onclick="gradeModal('${g.id}')"><i data-lucide="pencil"></i></button> <button class="b rd sm" onclick="delGrade('${g.id}')"><i data-lucide="trash-2"></i></button></td>`:''}</tr>`;
+
+/* ---------- кабінет учня ---------- */
+const SV={
+dash(){const gr=S.gr,pi=prodIdx(gr,S.goals),per=S.per;
+ return[`<div class="row" style="margin-bottom:16px;flex-wrap:nowrap">${avatar(S.p,56)}<div><h1>Привіт, ${esc(S.p.name||'учню')} 👋</h1><div class="mut">Ось твій навчальний огляд</div></div></div>
+ ${S.ann.length?`<div class="card" style="border-color:#8b6cff88"><h2>📢 ${esc(S.ann[0].title)}</h2><div class="mut">${esc(S.ann[0].body)}</div></div>`:''}
+ ${inboxHtml()}<div class="grid g4">${stat('target',f1(avg(gr.map(g=>g.value))),'Середній бал')}${stat('list-checks',gr.length,'Оцінок')}${stat('library',S.subs.length,'Предметів')}<div class="card st"><i data-lucide="zap"></i><b>${pi}</b><span class="mut">Індекс прогресу</span><div class="bar" style="margin-top:8px"><i style="width:${pi}%"></i></div></div></div>
+ <div class="grid g2"><div class="card"><h2>Зміна успішності</h2>${cv('c1')}</div><div class="card"><h2>За предметами</h2>${cv('c2')}</div></div>
+ <div class="grid g2"><div class="card"><h2>Останні оцінки</h2><div class="tbl"><table>${gr.slice(0,6).map(g=>gradeRow(g)).join('')||'<tr><td class="mut">Ще немає оцінок</td></tr>'}</table></div></div>
+ <div class="card"><h2>Навчальні цілі</h2>${goalsHtml()}</div></div>`,()=>{lineChart('c1',gr,'month');subjBar('c2',gr)}]},
+grades(){const f=S.cf;let rows=S.gr.filter(g=>(!f.s||g.subject_id===f.s)&&(!f.a||g.date>=f.a)&&(!f.b||g.date<=f.b));
+ return[`<h1>Електронний журнал</h1><div class="card"><div class="row"><div><label>Предмет</label><select id="fs" onchange="fl()"><option value="">Усі</option>${S.subs.map(s=>`<option value="${s.id}" ${f.s===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div><div><label>Від</label><input type="date" id="fa" value="${f.a||''}" onchange="fl()"></div><div><label>До</label><input type="date" id="fb" value="${f.b||''}" onchange="fl()"></div><button class="b n" onclick="gradeModal()"><i data-lucide="plus"></i>Додати</button></div>
+ <p class="mut">Знайдено: ${rows.length} · середній бал: <b style="color:var(--t)">${f1(avg(rows.map(g=>g.value)))}</b></p>
+ <div class="tbl"><table><tr><th>Дата</th><th>Предмет</th><th>Оцінка</th><th>Коментар</th><th></th></tr>${rows.map(g=>gradeRow(g,1)).join('')||'<tr><td colspan=5 class="mut">Нічого не знайдено</td></tr>'}</table></div></div>`]},
+subjects(){return[`<h1>Предмети</h1><div class="card"><div class="row"><input id="ns" placeholder="Назва нового предмета"><button class="b n" onclick="addSub()"><i data-lucide="plus"></i>Додати</button></div></div>
+ <div class="grid g4">${S.subs.map(s=>{const g=S.gr.filter(x=>x.subject_id===s.id);return`<div class="card" style="cursor:pointer" onclick="location.hash='#/subject/${s.id}'"><h2>${esc(s.name)}</h2><b style="font-size:28px;color:var(--t)">${f1(avg(g.map(x=>x.value)))}</b><div class="mut">${g.length} оцінок</div></div>`}).join('')||'<p class="mut">Додайте перший предмет</p>'}</div>`]},
+subject(id){const s=S.subs.find(x=>x.id===id);if(!s)return['<p>Предмет не знайдено</p>'];const g=S.gr.filter(x=>x.subject_id===id),v=g.map(x=>x.value);
+ return[`<h1>${esc(s.name)}</h1><div class="grid g4">${stat('target',f1(avg(v)),'Середній')}${stat('list-checks',g.length,'Оцінок')}${stat('arrow-up',v.length?Math.max(...v):'—','Найкраща')}${stat('arrow-down',v.length?Math.min(...v):'—','Найгірша')}</div>
+ <div class="card"><h2>Графік успішності</h2>${cv('c1')}</div><div class="card"><div class="tbl"><table>${g.map(x=>gradeRow(x,1)).join('')}</table></div><button class="b rd sm" onclick="delSub('${id}')"><i data-lucide="trash-2"></i>Видалити предмет</button></div>`,()=>lineChart('c1',g,'year')]},
+progress(){const gr=S.gr,n=PD[S.per],cur=win(gr,n,0),prv=win(gr,n,1);
+ const ids=[...new Set(S.gr.map(g=>g.subject_id))],imp=[],need=[];
+ ids.forEach(i=>{const c=cur.filter(g=>g.subject_id===i).map(g=>g.value),p=prv.filter(g=>g.subject_id===i).map(g=>g.value);if(c.length&&p.length&&avg(c)-avg(p)>=.3)imp.push(`${sname(i)} (+${f1(avg(c)-avg(p))})`);if(c.length&&(avg(c)<7||(p.length&&avg(p)-avg(c)>=.5)))need.push(`${sname(i)} (${f1(avg(c))})`)});
+ const d=avg(cur.map(g=>g.value))-avg(prv.map(g=>g.value)),has=cur.length&&prv.length;
+ return[`<div class="row" style="margin-bottom:14px"><h1>Мій прогрес</h1><div class="seg n">${Object.keys(PD).map(k=>`<button class="${k===S.per?'on':''}" onclick="S.per='${k}';go()">${PN[k]}</button>`).join('')}</div></div>
+ <div class="card" style="border-color:#35d6c566"><h2>Аналітика</h2><p>📈 <b>Успішність:</b> ${has?(d>=0?'зросла на ':'знизилась на ')+f1(Math.abs(d)):'недостатньо даних для порівняння з попереднім періодом'}.</p><p>✅ <b>Покращення:</b> ${imp.join(', ')||'—'}</p><p>⚠️ <b>Потребують уваги:</b> ${need.join(', ')||'—'}</p></div>
+ <div class="grid g2"><div class="card"><h2>Середній бал у часі</h2>${cv('c1')}</div><div class="card"><h2>Оцінки за предметами</h2>${cv('c2')}</div>
+ <div class="card"><h2>Розподіл оцінок</h2>${cv('c3')}</div><div class="card"><h2>Активність за тижнями</h2>${cv('c4')}</div>
+ <div class="card"><h2>Поточний і попередній період</h2>${cv('c5')}</div><div class="card"><h2>Виконання цілей</h2>${cv('c6')}</div></div>`,()=>{
+ lineChart('c1',cur,S.per);subjBar('c2',cur);
+ const dist=Array(12).fill(0);cur.forEach(g=>dist[g.value-1]++);mkChart('c3',{type:'doughnut',data:{labels:dist.map((_,i)=>i+1),datasets:[{data:dist,backgroundColor:dist.map((_,i)=>`hsl(${230-i*14},80%,62%)`),borderWidth:0}]},options:{plugins:{legend:{position:'right',labels:{color:'#8D99B8'}}}}});
+ const wk=[...Array(8)].map((_,i)=>7-i),wl=wk.map(i=>gr.filter(g=>g.date>dstr(i*7+7)&&g.date<=dstr(i*7)).length);mkChart('c4',{type:'bar',data:{labels:wk.map(i=>i?`-${i} т.`:'ця'),datasets:[{label:'Оцінок',data:wl,backgroundColor:'#8B6CFF',borderRadius:8}]},options:{plugins:{legend:{display:false}}}});
+ mkChart('c5',{type:'bar',data:{labels:ids.map(sname),datasets:[{label:'Попередній',data:ids.map(i=>+f1(avg(prv.filter(g=>g.subject_id===i).map(g=>g.value)))),backgroundColor:'#8D99B855',borderRadius:6},{label:'Поточний',data:ids.map(i=>+f1(avg(cur.filter(g=>g.subject_id===i).map(g=>g.value)))),backgroundColor:'#5685FF',borderRadius:6}]},options:{scales:{y:{max:12,beginAtZero:true,ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},x:{ticks:{color:'#8D99B8'},grid:{display:false}}}}});
+ mkChart('c6',{type:'bar',data:{labels:S.goals.map(g=>g.title),datasets:[{label:'%',data:S.goals.map(g=>goalP(g,gr)),backgroundColor:'#35D6C5',borderRadius:8}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:100,beginAtZero:true,ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},y:{ticks:{color:'#8D99B8'},grid:{display:false}}}}})}]},
+prod(){const gr=S.gr,pi=prodIdx(gr,S.goals),rec=gr.filter(g=>g.date>dstr(14)).length;
+ return[`<h1>Продуктивність</h1><div class="grid g2"><div class="card row" style="flex-wrap:nowrap"><div class="ring n" style="--p:${pi}"><span>${pi}</span></div><div><h2>Індекс 0–100</h2><p class="mut">40% — середній бал, 30% — реальна навчальна активність (оцінки за 14 днів: ${rec}/8), 30% — виконання цілей. Відкрите вікно сайту не рахується.</p></div></div>
+ <div class="card"><h2>Нова ціль</h2><input id="gt" placeholder="Назва цілі"><div class="row"><div><label>Тип</label><select id="gk"><option value="avg">Середній бал ≥</option><option value="count">Кількість оцінок</option></select></div><div><label>Значення</label><input id="gv" type="number" min="1" step="0.5" value="10"></div></div><br><button class="b" onclick="addGoal()"><i data-lucide="plus"></i>Додати ціль</button></div></div>
+ <div class="card"><h2>Мої цілі</h2>${goalsHtml(1)}</div>`]},
+ach(){const u=ACH.map(a=>a[2](S.gr,S.goals,S.subs));return[`<h1>Досягнення</h1><p class="mut">Відкрито ${u.filter(Boolean).length} з ${ACH.length}</p><div class="grid g4">${ACH.map((a,i)=>`<div class="card ach ${u[i]?'ok':''}" style="text-align:center"><div style="font-size:42px">${a[0]}</div><b>${a[1]}</b></div>`).join('')}</div>`]},
+profile(){const gr=S.gr;return[`<h1>Профіль</h1><div class="grid g2"><div class="card"><div class="row" style="flex-wrap:nowrap">${avatar(S.p,64)}<div><b>${esc(S.p.name)}</b><div class="mut">${esc(S.p.email)}</div><div class="mut">З нами з ${new Date(S.p.created_at).toLocaleDateString('uk')}</div></div></div>
+ <label>Ім’я</label><input id="pn" value="${esc(S.p.name)}"><label>Колір аватара</label><div class="row" style="flex-wrap:nowrap">${['#5685FF','#8B6CFF','#35D6C5','#ff5c7c','#ffb454'].map(c=>`<div class="av n" style="background:${c};width:34px;height:34px;cursor:pointer;${S.p.avatar===c?'outline:2px solid #fff':''}" onclick="S.p.avatar='${c}';go()"></div>`).join('')}</div><br><button class="b" onclick="saveProf()">Зберегти</button></div>
+ <div class="card"><h2>Статистика</h2><p>Оцінок: <b>${gr.length}</b> · Предметів: <b>${S.subs.length}</b></p><p>Середній бал: <b>${f1(avg(gr.map(g=>g.value)))}</b></p><p>Індекс продуктивності: <b>${prodIdx(gr,S.goals)}</b></p><p>Досягнень: <b>${ACH.filter(a=>a[2](gr,S.goals,S.subs)).length}/${ACH.length}</b></p></div></div>`]},
+settings(){return[`<h1>Налаштування</h1><div class="card" style="max-width:460px"><h2>Зміна пароля</h2><label>Новий пароль</label><input id="pw" type="password" autocomplete="new-password"><div class="err" id="er"></div><button class="b" onclick="newPw()">Змінити</button></div><div class="card" style="max-width:460px"><h2>Акаунт</h2><p class="mut">${esc(S.p.email)}</p><button class="b gh" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></div>`]}};
+
+function goalsHtml(del){return S.goals.map(g=>{const p=goalP(g,S.gr);return`<div style="margin-bottom:12px"><div class="row" style="flex-wrap:nowrap"><span>${esc(g.title)} <span class="mut">(${g.kind==='avg'?'бал ≥ ':'оцінок: '}${g.target})</span></span><b class="n">${p}%</b>${del?`<button class="b rd sm n" onclick="delGoal('${g.id}')"><i data-lucide="x"></i></button>`:''}</div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('')||'<p class="mut">Цілей поки немає — створіть у розділі «Продуктивність»</p>'}
+function lineChart(id,gr,per){const m=group(gr,g=>bucket(g.date,per)),ks=Object.keys(m).sort();mkChart(id,{type:'line',data:{labels:ks,datasets:[{label:'Середній бал',data:ks.map(k=>+f1(avg(m[k]))),borderColor:'#5685FF',backgroundColor:'#5685ff33',fill:true,tension:.4,pointBackgroundColor:'#35D6C5'}]},options:{scales:{y:{min:0,max:12,ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},x:{ticks:{color:'#8D99B8'},grid:{display:false}}}}})}
+function subjBar(id,gr){const m=group(gr,g=>g.subject_id),ks=Object.keys(m);mkChart(id,{type:'bar',data:{labels:ks.map(sname),datasets:[{label:'Середній',data:ks.map(k=>+f1(avg(m[k]))),backgroundColor:ks.map((_,i)=>['#5685FF','#8B6CFF','#35D6C5'][i%3]),borderRadius:8}]},options:{plugins:{legend:{display:false}},scales:{y:{max:12,beginAtZero:true,ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},x:{ticks:{color:'#8D99B8'},grid:{display:false}}}}})}
+
+/* ---------- дії учня ---------- */
+function fl(){S.cf={s:$('#fs').value,a:$('#fa').value,b:$('#fb').value};go()}
+function modal(h){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="card">${h}</div>`;m.onclick=e=>e.target===m&&m.remove();document.body.append(m);icons();return m}
+const closeM=()=>document.querySelectorAll('.modal').forEach(m=>m.remove());
+function gradeModal(id){const g=S.gr.find(x=>x.id===id)||{date:dstr(0),value:10,comment:''};
+ modal(`<h2>${id?'Редагувати':'Нова'} оцінка</h2><label>Предмет</label><select id="mS">${S.subs.map(s=>`<option value="${s.id}" ${g.subject_id===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select><input id="mN" placeholder="…або введіть новий предмет" style="margin-top:6px">
+ <div class="row"><div><label>Оцінка (1–12)</label><select id="mV">${[...Array(12)].map((_,i)=>`<option ${g.value===i+1?'selected':''}>${i+1}</option>`).join('')}</select></div><div><label>Дата</label><input type="date" id="mD" value="${g.date}"></div></div>
+ <label>Коментар</label><textarea id="mC" rows="2" maxlength="300">${esc(g.comment)}</textarea><div class="err" id="mE"></div><div class="row"><button class="b gh" onclick="closeM()">Скасувати</button><button class="b" onclick="saveGrade('${id||''}')">Зберегти</button></div>`)}
+async function saveGrade(id){let sid=$('#mS').value;const nn=$('#mN').value.trim();
+ if(nn){const ex=S.subs.find(s=>s.name.toLowerCase()===nn.toLowerCase());if(ex)sid=ex.id;else{const{data,error}=await sb.from('subjects').insert({name:nn}).select().single();if(error)return $('#mE').textContent=error.message;sid=data.id}}
+ if(!sid)return $('#mE').textContent='Оберіть або створіть предмет';
+ const row={subject_id:sid,value:+$('#mV').value,date:$('#mD').value,comment:$('#mC').value.trim()};
+ const{error}=id?await sb.from('grades').update(row).eq('id',id):await sb.from('grades').insert(row);
+ if(error)return $('#mE').textContent=error.message;log(id?'grade_edit':'grade_add',{value:row.value});closeM();await load();toast('Збережено ✔');go()}
+async function delGrade(id){if(!confirm('Видалити оцінку?'))return;const{error}=await sb.from('grades').delete().eq('id',id);if(error)return toast(error.message,1);await load();go()}
+async function addSub(){const n=$('#ns').value.trim();if(!n)return;const{error}=await sb.from('subjects').insert({name:n});if(error)return toast(error.message,1);await load();go()}
+async function delSub(id){if(!confirm('Видалити предмет разом з оцінками?'))return;const{error}=await sb.from('subjects').delete().eq('id',id);if(error)return toast(error.message,1);await load();location.hash='#/subjects'}
+async function addGoal(){const t=$('#gt').value.trim(),v=+$('#gv').value;if(!t||!(v>0))return toast('Заповніть назву та значення',1);const{error}=await sb.from('goals').insert({title:t,kind:$('#gk').value,target:v});if(error)return toast(error.message,1);log('goal_add');await load();go()}
+async function delGoal(id){await sb.from('goals').delete().eq('id',id);await load();go()}
+async function saveProf(){const{error}=await sb.from('profiles').update({name:$('#pn').value.trim(),avatar:S.p.avatar}).eq('id',S.u.id);if(error)return toast(error.message,1);S.p.name=$('#pn').value.trim();log('profile_update');toast('Профіль оновлено ✔');go()}
+
+/* ---------- адмінпанель ---------- */
+const allRows=async make=>{const out=[];for(let from=0;;from+=1000){const{data,error}=await make().range(from,from+999);if(error)return{data:null,error};out.push(...(data||[]));if(!data||data.length<1000)break;}return{data:out,error:null}};
+async function loadAdmin(){const q=(t,o)=>{const r=sb.from(t).select('*');return o?r.order(o,{ascending:false}):r};
+ const[p,g,l,e,s,b,a,m]=await Promise.all([allRows(()=>q('profiles','created_at')),allRows(()=>q('grades')),allRows(()=>q('goals')),sb.from('events').select('*').order('created_at',{ascending:false}).limit(300),allRows(()=>q('subjects')),allRows(()=>q('bans','created_at')),sb.from('audit_log').select('*').order('created_at',{ascending:false}).limit(300),sb.from('messages').select('*').order('created_at',{ascending:false}).limit(50)]);
+ [p,g,l,e,s,b,a,m].forEach(x=>x.error&&toast(x.error.message,1));A.pr=p.data||[];A.gr=g.data||[];A.gl=l.data||[];A.ev=e.data||[];A.sb=s.data||[];A.bn=b.data||[];A.au=a.data||[];A.ms=m.data||[];A.loaded=true}
+async function loadMod(){const[p,b,a]=await Promise.all([allRows(()=>sb.from('profiles').select('*').order('created_at',{ascending:false})),allRows(()=>sb.from('bans').select('*').order('created_at',{ascending:false})),sb.from('audit_log').select('*').order('created_at',{ascending:false}).limit(300)]);
+ [p,b,a].forEach(x=>x.error&&toast(x.error.message,1));A.pr=p.data||[];A.bn=b.data||[];A.au=a.data||[];A.loaded=true}
+const staffReload=()=>isAdm()?loadAdmin():loadMod();
+const online=p=>Date.now()-new Date(p.last_seen)<12e4,pname=id=>{const p=A.pr.find(x=>x.id===id);return p?(p.name||p.email):'—'};
+function urows(){return A.pr.map(p=>{const g=A.gr.filter(x=>x.user_id===p.id),l=A.gl.filter(x=>x.user_id===p.id);return{p,avg:avg(g.map(x=>x.value)),n:g.length,prod:prodIdx(g,l),prog:(win(g,30,0).length&&win(g,30,1).length)?avg(win(g,30,0).map(x=>x.value))-avg(win(g,30,1).map(x=>x.value)):0,act:A.ev.filter(e=>e.user_id===p.id&&e.created_at>new Date(Date.now()-7*864e5).toISOString()).length}})}
+const AV={
+overview(){const on=A.pr.filter(online).length,nw=A.pr.filter(p=>p.created_at>new Date(Date.now()-7*864e5).toISOString()).length;
+ return[`<h1>Overview</h1><div class="grid g4">${stat('users',A.pr.length,'Користувачів')}${stat('shield-check',A.pr.filter(p=>p.role==='moderator').length,'Модераторів')}${stat('wifi',on,'Онлайн','sOn')}${stat('wifi-off',A.pr.length-on,'Офлайн','sOff')}${stat('ban',A.pr.filter(isBl).length,'Заблоковано')}${stat('user-plus',nw,'Нових за 7 днів')}${stat('list-checks',A.gr.length,'Оцінок')}${stat('target',f1(avg(A.gr.map(g=>g.value))),'Середній бал')}</div>
+ <div class="grid g2"><div class="card"><h2>Активність платформи (14 днів)</h2>${cv('c1')}</div><div class="card"><h2>Останні події</h2><div class="tbl"><table>${feed().slice(0,8).map(feedRow).join('')||'<tr><td class="mut">Подій немає</td></tr>'}</table></div></div></div>`,()=>evChart('c1')]},
+
+rating(){const R=urows().filter(r=>r.p.role==='user'),L=(t,k,fm)=>`<div class="card"><h2>${t}</h2><table>${[...R].sort((a,b)=>b[k]-a[k]).slice(0,10).map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.p.name||r.p.email)}</td><td><b style="color:var(--t)">${fm(r[k])}</b></td></tr>`).join('')||'<tr><td class="mut">Немає даних</td></tr>'}</table></div>`;
+ return[`<h1>Рейтинг</h1><p class="mut">Видно лише адміністраторам.</p><div class="grid g2">${L('🏆 За середнім балом','avg',f1)}${L('⚡ За продуктивністю','prod',v=>v)}${L('📈 За прогресом (30 днів)','prog',v=>(v>0?'+':'')+f1(v))}${L('🔥 Найактивніші (7 днів)','act',v=>v+' под.')}</div>`]},
+analytics(){return[`<h1>Аналітика</h1><div class="grid g2"><div class="card"><h2>Реєстрації (14 днів)</h2>${cv('c1')}</div><div class="card"><h2>Розподіл оцінок</h2>${cv('c2')}</div><div class="card"><h2>Середній бал за предметами</h2>${cv('c3')}</div><div class="card"><h2>Події (14 днів)</h2>${cv('c4')}</div></div>`,()=>{
+ const days=[...Array(14)].map((_,i)=>dstr(13-i));mkChart('c1',{type:'bar',data:{labels:days.map(d=>d.slice(5)),datasets:[{label:'Нові',data:days.map(d=>A.pr.filter(p=>ld(p.created_at)===d).length),backgroundColor:'#35D6C5',borderRadius:6}]},options:{plugins:{legend:{display:false}}}});
+ const dist=Array(12).fill(0);A.gr.forEach(g=>dist[g.value-1]++);mkChart('c2',{type:'bar',data:{labels:dist.map((_,i)=>i+1),datasets:[{label:'К-сть',data:dist,backgroundColor:'#8B6CFF',borderRadius:6}]},options:{plugins:{legend:{display:false}}}});
+ const nm=id=>(A.sb.find(s=>s.id===id)||{}).name||'—',m={};A.gr.forEach(g=>(m[nm(g.subject_id).toLowerCase()]??=[]).push(g.value));const ks=Object.keys(m).slice(0,12);mkChart('c3',{type:'bar',data:{labels:ks,datasets:[{label:'Сер.',data:ks.map(k=>+f1(avg(m[k]))),backgroundColor:'#5685FF',borderRadius:6}]},options:{indexAxis:'y',plugins:{legend:{display:false}}}});evChart('c4')}]},
+
+ann(){return[`<h1>Оголошення</h1><div class="card"><input id="at" placeholder="Заголовок"><label>Текст</label><textarea id="ab" rows="3"></textarea><br><br><button class="b" onclick="postAnn()"><i data-lucide="send"></i>Опублікувати всім</button></div><div class="card"><h2>Опубліковані</h2>${S.ann.map(a=>`<div class="row" style="flex-wrap:nowrap;margin-bottom:10px"><div><b>${esc(a.title)}</b><div class="mut">${esc(a.body)}</div></div><button class="b rd sm n" onclick="delAnn('${a.id}')"><i data-lucide="trash-2"></i></button></div>`).join('')||'<p class="mut">Немає</p>'}</div>`]},
+asettings(){return[`<h1>Налаштування</h1><div class="card" style="max-width:460px"><h2>Експорт CSV</h2><div class="row"><button class="b" onclick="expUsers()"><i data-lucide="download"></i>Користувачі</button><button class="b" onclick="expGrades()"><i data-lucide="download"></i>Оцінки</button><button class="b" onclick="expBans()"><i data-lucide="download"></i>Блокування</button><button class="b" onclick="expAudit()"><i data-lucide="download"></i>Журнал</button></div></div><div class="card" style="max-width:460px"><button class="b gh" onclick="A.loaded=0;go()"><i data-lucide="refresh-cw"></i>Оновити дані</button></div>`]}};
+function evChart(id){const days=[...Array(14)].map((_,i)=>dstr(13-i));mkChart(id,{type:'line',data:{labels:days.map(d=>d.slice(5)),datasets:[{label:'Події',data:days.map(d=>A.ev.filter(e=>ld(e.created_at)===d).length),borderColor:'#8B6CFF',backgroundColor:'#8b6cff33',fill:true,tension:.4}]},options:{plugins:{legend:{display:false}}}})}
+function userModal(id){const p=A.pr.find(x=>x.id===id),g=A.gr.filter(x=>x.user_id===id).sort((a,b)=>b.date.localeCompare(a.date)),l=A.gl.filter(x=>x.user_id===id),nm=i=>(A.sb.find(s=>s.id===i)||{}).name||'—';
+ modal(`<div class="row" style="flex-wrap:nowrap">${avatar(p,52)}<div><b>${esc(p.name)}</b><div class="mut">${esc(p.email)} · з ${new Date(p.created_at).toLocaleDateString('uk')}</div></div></div><p>Середній: <b>${f1(avg(g.map(x=>x.value)))}</b> · Оцінок: <b>${g.length}</b> · Продуктивність: <b>${prodIdx(g,l)}</b></p><div class="bar"><i style="width:${prodIdx(g,l)}%"></i></div><h2 style="margin-top:14px">Останні оцінки</h2><div class="tbl" style="max-height:230px;overflow:auto"><table>${g.slice(0,15).map(x=>`<tr><td>${x.date}</td><td>${esc(nm(x.subject_id))}</td><td><span class="pill">${x.value}</span></td></tr>`).join('')}</table></div><br><button class="b gh" onclick="closeM()">Закрити</button>`)}
+async function postAnn(){const t=$('#at').value.trim();if(!t)return;const{error}=await sb.from('announcements').insert({title:t,body:$('#ab').value.trim()});if(error)return toast(error.message,1);await load();go()}
+async function delAnn(id){await sb.from('announcements').delete().eq('id',id);await load();go()}
+function csv(rows,name){const s=rows.map(r=>r.map(c=>{c=String(c??'');if(/^[=+\-@]/.test(c))c="'"+c;return'"'+c.replace(/"/g,'""')+'"'}).join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+s],{type:'text/csv'}));a.download=name;a.click()}
+const expUsers=()=>csv([['email','name','role','blocked','created','grades','avg']].concat(A.pr.map(p=>{const g=A.gr.filter(x=>x.user_id===p.id);return[p.email,p.name,p.role,p.blocked,p.created_at,g.length,f1(avg(g.map(x=>x.value)))]})),'users.csv');
+const expGrades=()=>csv([['user','subject','value','date','comment']].concat(A.gr.map(g=>[pname(g.user_id),(A.sb.find(s=>s.id===g.subject_id)||{}).name,g.value,g.date,g.comment])),'grades.csv');
+
+/* ================= v2: ролі, блокування, повідомлення, журнал ================= */
+const AU={ban:'заблокував(ла)',unban:'розблокував(ла)',set_role:'змінив(ла) роль',announcement_create:'створив(ла) оголошення',announcement_delete:'видалив(ла) оголошення',message_send:'надіслав(ла) повідомлення'};
+const auText=a=>(AU[a.action]||a.action)+(a.target_name?' → '+a.target_name:'')+(a.action==='ban'&&a.details?' ('+(a.details.reason||'')+'; '+(a.details.until?'до '+fdt(a.details.until):'безстроково')+')':a.action==='set_role'&&a.details?' ('+(ROLE[a.details.from]||'')+' → '+(ROLE[a.details.to]||'')+')':a.details&&a.details.title?' «'+a.details.title+'»':'');
+const feed=()=>[...A.ev.map(e=>({t:e.created_at,u:pname(e.user_id),x:(EV[e.type]||e.type)+(e.payload&&e.payload.value?' · оцінка '+e.payload.value:'')})),...A.au.map(a=>({t:a.created_at,u:a.actor_name||'—',x:auText(a)}))].sort((a,b)=>b.t.localeCompare(a.t));
+const feedRow=f=>`<tr><td class="mut" style="white-space:nowrap">${fdt(f.t)}</td><td><b>${esc(f.u)}</b> ${esc(f.x)}</td></tr>`;
+const stCell=p=>isBl(p)?`<span class="pill r">заблок. ${p.blocked_until?'до '+fdt(p.blocked_until):'назавжди'}</span>`:online(p)?'<span class="pill">онлайн</span>':'<span class="pill y">офлайн</span>';
+const banAct=p=>p.id===S.u.id?'':isBl(p)?`<button class="b sm" onclick="unban('${p.id}')">Розблокувати</button>`:`<button class="b rd sm" onclick="banModal('${p.id}')">Блокувати</button>`;
+const roleBtn=p=>(!isAdm()||p.role==='admin'||p.id===S.u.id)?'':p.role==='moderator'?`<button class="b gh sm" onclick="setRole('${p.id}','user')">Зняти модератора</button>`:`<button class="b gh sm" onclick="setRole('${p.id}','moderator')">Призначити модератором</button>`;
+const refocus=()=>{const i=$('#uq');if(i&&S.uq){i.focus();i.setSelectionRange(99,99)}};
+const inboxHtml=()=>{const u=S.msg.filter(m=>!m.read_at);return S.msg.length?`<div class="card" style="border-color:#35d6c566"><div class="row" style="flex-wrap:nowrap"><h2>✉️ Повідомлення ${u.length?`<span class="pill">${u.length} нових</span>`:''}</h2>${u.length?'<button class="b gh sm n" onclick="readAll()">Прочитано</button>':''}</div>${S.msg.slice(0,4).map(m=>`<p><b>${esc(m.title)}</b> <span class="mut">${fdt(m.created_at)}</span><br><span class="mut">${esc(m.body)}</span></p>`).join('')}</div>`:''};
+const readAll=async()=>{await sb.rpc('mark_messages_read');await load();go()};
+
+Object.assign(AV,{
+users(){const q=(S.uq||'').toLowerCase(),f=S.uf||'',rows=A.pr.filter(p=>(!q||(p.email+p.name).toLowerCase().includes(q))&&(!f||(f==='on'?online(p):f==='bl'?isBl(p):p.role===f)));
+ return[`<h1>Користувачі</h1><div class="card"><div class="row"><input id="uq" placeholder="Пошук за ім’ям або email" value="${esc(S.uq||'')}" oninput="S.uq=this.value;clearTimeout(S.ut);S.ut=setTimeout(go,300)"><select onchange="S.uf=this.value;go()">${[['','Усі'],['on','Онлайн'],['bl','Заблоковані'],['user','Користувачі'],['moderator','Модератори'],['admin','Адміни']].map(o=>`<option value="${o[0]}" ${f===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+ <div class="tbl"><table><tr><th>Користувач</th><th>Роль</th><th>Статус</th><th>Оцінок</th><th>Сер.</th><th></th></tr>${rows.map(p=>{const g=A.gr.filter(x=>x.user_id===p.id);return`<tr><td><b>${esc(p.name)}</b><div class="mut">${esc(p.email)}</div></td><td><span class="pill y">${ROLE[p.role]}</span></td><td>${stCell(p)}</td><td>${g.length}</td><td>${f1(avg(g.map(x=>x.value)))}</td><td style="white-space:nowrap"><button class="b gh sm" onclick="userModal('${p.id}')"><i data-lucide="eye"></i></button> ${banAct(p)} ${roleBtn(p)}</td></tr>`}).join('')||'<tr><td colspan=6 class="mut">Нікого не знайдено</td></tr>'}</table></div></div>`,refocus]},
+moderators(){const ms=A.pr.filter(p=>p.role==='moderator'),mine=id=>A.au.filter(a=>a.actor_id===id);
+ return[`<h1>Модератори</h1><div class="card"><div class="row"><select id="nm_u">${A.pr.filter(p=>p.role==='user').map(p=>`<option value="${p.id}">${esc(p.name||p.email)} · ${esc(p.email)}</option>`).join('')}</select><button class="b n" onclick="setRole($('#nm_u').value,'moderator')"><i data-lucide="user-plus"></i>Призначити модератором</button></div></div>
+ <div class="card"><div class="tbl"><table><tr><th>Модератор</th><th>Статус</th><th>Блокувань</th><th>Розблокувань</th><th>Остання дія</th><th></th></tr>${ms.map(p=>{const m=mine(p.id);return`<tr><td><b>${esc(p.name)}</b><div class="mut">${esc(p.email)}</div></td><td>${stCell(p)}</td><td>${m.filter(a=>a.action==='ban').length}</td><td>${m.filter(a=>a.action==='unban').length}</td><td>${m[0]?fdt(m[0].created_at):'—'}</td><td style="white-space:nowrap">${banAct(p)} ${roleBtn(p)}</td></tr>`}).join('')||'<tr><td colspan=6 class="mut">Модераторів немає</td></tr>'}</table></div></div>
+ <div class="card"><h2>Дії модераторів</h2><div class="tbl"><table>${A.au.filter(a=>a.actor_role==='moderator').slice(0,60).map(a=>`<tr><td class="mut" style="white-space:nowrap">${fdt(a.created_at)}</td><td><b>${esc(a.actor_name)}</b> ${esc(auText(a))}</td></tr>`).join('')||'<tr><td class="mut">Дій ще не було</td></tr>'}</table></div></div>`]},
+bans(){const live=b=>!b.lifted_at&&!(b.until&&new Date(b.until)<=Date.now()),st=b=>b.lifted_at?(b.lift_kind==='expired'?'<span class="pill y">завершено</span>':b.lift_kind==='replaced'?'<span class="pill y">замінено</span>':'<span class="pill">знято</span>'):live(b)?'<span class="pill r">діє</span>':'<span class="pill y">завершено</span>';
+ return[`<h1>Історія блокувань</h1><div class="card"><div class="tbl"><table><tr><th>Дата</th><th>Користувач</th><th>Причина</th><th>Виконавець</th><th>Термін</th><th>Статус</th><th></th></tr>${A.bn.map(b=>`<tr><td class="mut">${fdt(b.created_at)}</td><td>${esc(pname(b.user_id))}</td><td>${esc(b.reason)}</td><td>${esc(b.by_name||'—')}</td><td>${b.until?'до '+fdt(b.until):'безстроково'}</td><td>${st(b)}</td><td>${live(b)&&b.user_id!==S.u.id?`<button class="b sm" onclick="unban('${b.user_id}')">Розблокувати</button>`:''}</td></tr>`).join('')||'<tr><td colspan=7 class="mut">Блокувань ще не було</td></tr>'}</table></div></div>`]},
+audit(){return[`<h1>Журнал адміністративних дій</h1><p class="mut">Журнал веде сервер; змінити чи видалити записи неможливо.</p><div class="card"><div class="tbl"><table><tr><th>Час</th><th>Роль</th><th>Дія</th></tr>${A.au.map(a=>`<tr><td class="mut" style="white-space:nowrap">${fdt(a.created_at)}</td><td><span class="pill y">${ROLE[a.actor_role]||'система'}</span></td><td><b>${esc(a.actor_name||'—')}</b> ${esc(auText(a))}</td></tr>`).join('')||'<tr><td colspan=3 class="mut">Порожньо</td></tr>'}</table></div></div>`]},
+msgs(){return[`<h1>Повідомлення</h1><div class="card" style="max-width:560px"><label>Отримувач</label><select id="mt">${A.pr.filter(p=>p.id!==S.u.id).map(p=>`<option value="${p.id}">${esc(p.name||p.email)} · ${ROLE[p.role]}</option>`).join('')}</select><label>Заголовок</label><input id="mti" maxlength="120"><label>Текст</label><textarea id="mb" rows="3" maxlength="1000"></textarea><br><br><button class="b" onclick="sendMsg()"><i data-lucide="send"></i>Надіслати</button></div><div class="card"><h2>Надіслані</h2><div class="tbl"><table>${A.ms.map(m=>`<tr><td class="mut">${fdt(m.created_at)}</td><td>${esc(pname(m.to_id))}</td><td><b>${esc(m.title)}</b></td><td>${m.read_at?'<span class="pill">прочитано</span>':'<span class="pill y">нове</span>'}</td></tr>`).join('')||'<tr><td class="mut">Немає</td></tr>'}</table></div></div>`]},
+live(){return[`<h1>Live Activity <span class="pill">● realtime</span></h1><div class="card"><div class="tbl"><table>${feed().slice(0,60).map(feedRow).join('')||'<tr><td class="mut">Очікуємо події…</td></tr>'}</table></div></div>`]}
+});
+
+/* ---------- панель модератора (обмежені права; решту перевіряє сервер) ---------- */
+const MV={
+overview(){const me=S.u.id,mine=A.au.filter(a=>a.actor_id===me),us=A.pr.filter(p=>p.role==='user'),on=us.filter(online).length,
+ act=A.bn.filter(b=>b.by_id===me&&!b.lifted_at&&(!b.until||new Date(b.until)>Date.now())).length;
+ return[`<h1>Панель модератора</h1><div class="grid g4">${stat('users',us.length,'Користувачів')}${stat('wifi',on,'Онлайн','sOn')}${stat('ban',us.filter(isBl).length,'Заблоковано зараз')}${stat('gavel',mine.filter(a=>a.action==='ban').length,'Моїх блокувань')}${stat('unlock',mine.filter(a=>a.action==='unban').length,'Моїх розблокувань')}${stat('shield-alert',act,'Мої діючі блокування')}</div>${inboxHtml()}<div class="card"><h2>Мої дії (14 днів)</h2>${cv('c1')}</div>`,
+ ()=>{const days=[...Array(14)].map((_,i)=>dstr(13-i)),n=(k,d)=>mine.filter(a=>a.action===k&&ld(a.created_at)===d).length;mkChart('c1',{type:'bar',data:{labels:days.map(d=>d.slice(5)),datasets:[{label:'Блокування',data:days.map(d=>n('ban',d)),backgroundColor:'#ff5c7c',borderRadius:6},{label:'Розблокування',data:days.map(d=>n('unban',d)),backgroundColor:'#35D6C5',borderRadius:6}]}})}]},
+users(){const q=(S.uq||'').toLowerCase(),f=S.uf||'',rows=A.pr.filter(p=>p.role==='user'&&(!q||(p.email+p.name).toLowerCase().includes(q))&&(!f||(f==='on'?online(p):isBl(p))));
+ return[`<h1>Користувачі</h1><div class="card"><div class="row"><input id="uq" placeholder="Пошук за ім’ям або email" value="${esc(S.uq||'')}" oninput="S.uq=this.value;clearTimeout(S.ut);S.ut=setTimeout(go,300)"><select onchange="S.uf=this.value;go()">${[['','Усі'],['on','Онлайн'],['bl','Заблоковані']].map(o=>`<option value="${o[0]}" ${f===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+ <div class="tbl"><table><tr><th>Користувач</th><th>Реєстрація</th><th>Статус</th><th></th></tr>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b><div class="mut">${esc(p.email)}</div></td><td class="mut">${fdt(p.created_at)}</td><td>${stCell(p)}</td><td style="white-space:nowrap"><button class="b gh sm" onclick="basicModal('${p.id}')"><i data-lucide="eye"></i></button> ${banAct(p)}</td></tr>`).join('')||'<tr><td colspan=4 class="mut">Нікого не знайдено</td></tr>'}</table></div></div>`,refocus]},
+history(){const mine=A.au.filter(a=>a.actor_id===S.u.id);return[`<h1>Історія моїх дій</h1><div class="card"><div class="tbl"><table>${mine.map(a=>`<tr><td class="mut" style="white-space:nowrap">${fdt(a.created_at)}</td><td>${esc(auText(a))}</td></tr>`).join('')||'<tr><td class="mut">Дій ще не було</td></tr>'}</table></div></div>`]}};
+MV.settings=SV.settings;
+
+/* ---------- дії персоналу (кожна — через RPC з перевіркою на сервері) ---------- */
+function banModal(id){const p=A.pr.find(x=>x.id===id)||{};modal(`<h2>Блокування: ${esc(p.name||p.email)}</h2><label>Причина (обов’язково)</label><textarea id="bR" rows="3" maxlength="300"></textarea><label>Термін</label><select id="bT"><option value="1h">1 година</option><option value="1d">1 день</option><option value="7d">7 днів</option><option value="30d">30 днів</option><option value="perm">Безстроково</option></select><div class="err" id="mE"></div><div class="row"><button class="b gh" onclick="closeM()">Скасувати</button><button class="b rd" onclick="doBan('${id}')">Заблокувати</button></div>`)}
+async function doBan(id){const r=$('#bR').value.trim();if(r.length<3)return $('#mE').textContent='Вкажіть причину (мінімум 3 символи)';
+ const ms={'1h':36e5,'1d':864e5,'7d':6048e5,'30d':2592e6}[$('#bT').value],until=ms?new Date(Date.now()+ms).toISOString():null;
+ const{error}=await sb.rpc('ban_user',{target:id,why:r,until_ts:until});if(error)return $('#mE').textContent=error.message;closeM();await staffReload();toast('Користувача заблоковано');go()}
+async function unban(id){if(!confirm('Розблокувати користувача?'))return;const{error}=await sb.rpc('unban_user',{target:id});if(error)return toast(error.message,1);await staffReload();toast('Розблоковано');go()}
+async function setRole(id,role){if(!id)return;if(!confirm(role==='moderator'?'Призначити модератором?':'Зняти роль модератора?'))return;const{error}=await sb.rpc('set_role',{target:id,new_role:role});if(error)return toast(error.message,1);await staffReload();toast('Роль змінено');go()}
+function basicModal(id){const p=A.pr.find(x=>x.id===id);if(!p)return;const b=isBl(p)?activeBan(id):null;
+ modal(`<div class="row" style="flex-wrap:nowrap">${avatar(p,52)}<div><b>${esc(p.name)}</b><div class="mut">${esc(p.email)}</div></div></div><p>Реєстрація: <b>${fdt(p.created_at)}</b><br>Остання активність: <b>${fdt(p.last_seen)}</b><br>Статус: ${stCell(p)}</p>${b?`<p>Причина: <b>${esc(b.reason)}</b><br>Виконавець: ${esc(b.by_name||'—')}<br>Діє до: ${b.until?fdt(b.until):'безстроково'}</p>`:''}<button class="b gh" onclick="closeM()">Закрити</button>`)}
+const activeBan=id=>A.bn.find(b=>b.user_id===id&&!b.lifted_at);
+async function sendMsg(){const to=$('#mt').value,t=$('#mti').value.trim(),b=$('#mb').value.trim();if(!to||!t)return toast('Оберіть отримувача й вкажіть заголовок',1);
+ const{error}=await sb.from('messages').insert({to_id:to,from_id:S.u.id,title:t,body:b});if(error)return toast(error.message,1);toast('Надіслано ✔');await loadAdmin();go()}
+const expAudit=()=>csv([['time','actor','role','action','target','details']].concat(A.au.map(a=>[a.created_at,a.actor_name,a.actor_role,a.action,a.target_name,JSON.stringify(a.details)])),'audit.csv');
+const expBans=()=>csv([['created','user','reason','by','until','lifted_at','kind']].concat(A.bn.map(b=>[b.created_at,pname(b.user_id),b.reason,b.by_name,b.until,b.lifted_at,b.lift_kind])),'bans.csv');
+</script>
+</body>
+</html>
