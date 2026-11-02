@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>IT ACADEMY</title>
+<title>IT ACADEMY — навчальна платформа</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.447.0/dist/umd/lucide.min.js"></script>
@@ -52,6 +52,96 @@ canvas{max-height:300px}
 .seg{flex-wrap:wrap}
 @media(max-width:860px){.tag{display:none}}
 @media(max-width:480px){h1{font-size:21px}.main{padding:12px 10px}.card{padding:14px;border-radius:16px}.modal{align-items:start}td,th{padding:8px 5px;font-size:13px}.grid.g4{grid-template-columns:repeat(2,1fr)}.st b{font-size:24px}}
+
+/* ===== IT ACADEMY UI REFRESH ===== */
+:root{
+ --bg:#080d19;--card:#121c30;--a:#6b91ff;--v:#9878ff;--t:#40d9c6;
+ --tx:#f4f7ff;--mut:#9aa8c5;--line:#263653;--g:linear-gradient(125deg,#5e8cff 0%,#9272ff 100%);
+ --surface:#10192b;--surface2:#17243a;--shadow:0 18px 50px #0005;
+}
+body{background:radial-gradient(ellipse at 12% 0%,#27306455,transparent 34%),radial-gradient(ellipse at 100% 100%,#075c5b2b,transparent 30%),var(--bg);font-size:14px}
+body::before,body::after{opacity:.18;filter:blur(145px)}
+.shell{min-height:100vh;gap:0}
+.side{width:254px;padding:24px 15px 18px;background:rgba(10,17,31,.92);border-right:1px solid #ffffff12;box-shadow:8px 0 36px #0002;gap:7px;z-index:8}
+.side .logo{font-size:22px;padding:5px 12px 17px;letter-spacing:.8px}
+.tag{margin:0 7px 12px;padding:8px 11px;border:1px solid #40d9c633;background:#40d9c60d;border-radius:10px;font-size:10px;letter-spacing:1.4px}
+.nav{min-height:43px;padding:11px 13px;border:1px solid transparent;border-radius:12px;color:#a7b3ce;font-size:13px;font-weight:550}
+.nav svg{width:17px;height:17px;opacity:.88}
+.nav:hover{background:#ffffff0a;border-color:#ffffff0d;transform:translateX(2px)}
+.nav.on{background:linear-gradient(100deg,#5e8cff25,#9272ff1b);border-color:#7695ff42;color:#fff;box-shadow:inset 3px 0 0 #7899ff,0 8px 24px #466bff12}
+.main{max-width:none;width:100%;padding:0 34px 44px;animation:pop .35s both}
+.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #ffffff12;margin-bottom:28px;position:sticky;top:0;z-index:6;background:#080d19e8;backdrop-filter:blur(18px)}
+.top-left,.top-right{display:flex;align-items:center;gap:13px;min-width:0}
+.top-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.6px;color:var(--mut);font-weight:750}
+.top-title{font-size:17px;font-weight:750;letter-spacing:-.3px}
+.top-date{font-size:12px;color:var(--mut);white-space:nowrap}
+.top-user{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;background:#ffffff08;border:1px solid #ffffff12;border-radius:13px}
+.top-user-name{font-size:12px;font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-user-role{font-size:10px;color:var(--mut)}
+.icon-btn{width:38px;height:38px;display:grid;place-items:center;border:1px solid #ffffff18;background:#ffffff08;color:var(--tx);border-radius:11px;cursor:pointer}
+.icon-btn:hover{background:#ffffff14;border-color:#6b91ff88}
+.page-content{max-width:1440px;margin:0 auto}
+h1{font-size:clamp(23px,2vw,29px);font-weight:780;letter-spacing:-.8px;margin:0 0 7px}
+h2{font-size:16px;font-weight:720;letter-spacing:-.2px}
+.card{background:linear-gradient(145deg,#ffffff0a,transparent 55%),rgba(18,28,48,.94);border:1px solid #ffffff12;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 8px 28px #00000012}
+.card:hover{border-color:#7795ff42;box-shadow:0 14px 34px #0003}
+.grid{gap:16px}
+.st{position:relative;overflow:hidden;min-height:124px;padding:18px 20px}
+.st:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-35px;top:-40px;background:#6b91ff12;pointer-events:none}
+.st svg{width:20px;height:20px;color:#7da0ff}
+.st b{font-size:32px;letter-spacing:-1px;margin-top:10px}
+.st .mut{font-size:12px}
+input,select,textarea{background:#0b1425;border-color:#2b3b5b;border-radius:11px;padding:12px 14px;font-size:13px}
+input:focus,select:focus,textarea:focus{border-color:#7897ff;box-shadow:0 0 0 3px #6b91ff20}
+label{font-size:12px;font-weight:650;letter-spacing:.2px}
+button.b{border-radius:11px;padding:10px 15px;font-size:12px;box-shadow:0 5px 16px #557dff20}
+button.b:hover{box-shadow:0 9px 22px #557dff35}
+button.gh{border:1px solid #ffffff16;background:#ffffff0a}
+button.rd{box-shadow:0 5px 16px #ff5c7c20}
+.tbl{border:1px solid #ffffff10;border-radius:13px}
+table{min-width:620px}
+td,th{padding:12px 13px;border-bottom:1px solid #ffffff0d}
+th{background:#ffffff06;font-size:10px;letter-spacing:.8px}
+tr:last-child td{border-bottom:0}
+.pill{font-weight:700;padding:4px 10px}
+.bar{height:8px;background:#ffffff12}
+.auth{background:radial-gradient(ellipse at 50% 20%,#28366c55,transparent 48%)}
+.auth .card{border-color:#7795ff40;box-shadow:0 24px 80px #0008;padding:32px}
+.auth input{height:46px}
+.modal{background:#020611c9}
+.modal .card{box-shadow:var(--shadow);border-color:#ffffff20}
+#toast .tt{box-shadow:var(--shadow)}
+@media(max-width:1000px){
+ .side{width:224px}.main{padding:0 22px 34px}
+}
+@media(max-width:860px){
+ .shell{flex-direction:column}
+ .side{width:100%;height:auto;position:sticky;top:0;flex-direction:row;overflow-x:auto;padding:8px 10px;background:#0a1120f5;border-right:0;border-bottom:1px solid #ffffff18;gap:5px}
+ .side .logo,.side .tag{display:none}
+ .nav{width:auto;min-height:40px;white-space:nowrap;flex:none;padding:9px 12px}
+ .nav:hover{transform:none}
+ .main{padding:0 14px 30px}
+ .topbar{height:68px;margin-bottom:20px}
+ .top-date{display:none}
+}
+@media(max-width:560px){
+ .main{padding:0 11px 24px}
+ .topbar{height:62px;margin-bottom:17px}
+ .top-title{font-size:15px}
+ .top-kicker{font-size:9px}
+ .top-user{padding:4px;border:0;background:transparent}
+ .top-user-name,.top-user-role{display:none}
+ .card{padding:15px;border-radius:15px}
+ .grid{gap:10px}
+ .grid.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid.g2{grid-template-columns:1fr}
+ .st{min-height:108px;padding:14px}
+ .st b{font-size:25px}
+ .row{gap:8px}
+ .auth .card{padding:23px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
 </style>
 </head>
 <body>
@@ -178,8 +268,14 @@ async function go(){
  const V={a:AV,m:MV,u:SV}[mode],nav={a:ANAV,m:MNAV,u:NAV}[mode],fn=V[key]||V[mode==='u'?'dash':'overview'];
  let html;try{html=fn(r.split('/')[1])}catch(e){console.error(e);html=['<div class="card">Помилка відображення: '+esc(e.message)+'</div>']}
  const alt=mode!=='u'?['dash','Кабінет учня','graduation-cap']:isAdm()?['a-overview','Адмінпанель','shield-check']:isMod()?['m-overview','Панель модератора','shield']:null;
+ const pageName=(nav.find(n=>n[0]===key)||(key==='subject'?['subject','book-open','Предмет']:null)||nav[0])[2];
+ const displayName=S.p?.name||S.p?.email||'Користувач';
+ const roleName=mode==='a'?'Адміністратор':mode==='m'?'Модератор':'Учень';
+ const today=new Date().toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'});
  $('#app').innerHTML=`<div class="shell"><aside class="side"><div class="logo">IT ACADEMY</div><div class="tag">${{a:'NAVI Admin',m:'Moderator',u:'Student'}[mode]}</div>${nav.map(n=>`<button class="nav ${n[0]===key||(key==='subject'&&n[0]==='subjects')?'on':''}" onclick="location.hash='#/${pre}${n[0]}'"><i data-lucide="${n[1]}"></i>${n[2]}</button>`).join('')}
- <div style="flex:1"></div>${alt?`<button class="nav" onclick="location.hash='#/${alt[0]}'"><i data-lucide="${alt[2]}"></i>${alt[1]}</button>`:''}<button class="nav" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></aside><main class="main">${html[0]}</main></div>`;
+ <div style="flex:1;min-height:12px"></div>${alt?`<button class="nav" onclick="location.hash='#/${alt[0]}'"><i data-lucide="${alt[2]}"></i>${alt[1]}</button>`:''}<button class="nav" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></aside><main class="main">
+ <header class="topbar"><div class="top-left"><div><div class="top-kicker">IT ACADEMY / ${roleName}</div><div class="top-title">${pageName}</div></div></div><div class="top-right"><div class="top-date">${today}</div><div class="top-user">${avatar(S.p,34)}<div><div class="top-user-name">${esc(displayName)}</div><div class="top-user-role">${roleName}</div></div></div></div></header>
+ <section class="page-content">${html[0]}</section></main></div>`;
  icons();html[1]&&html[1]()}
 const rerender=()=>go();
 const stat=(i,v,l,id)=>`<div class="card st"><i data-lucide="${i}"></i><b${id?` id="${id}"`:''}>${v}</b><span class="mut">${l}</span></div>`;
