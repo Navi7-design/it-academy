@@ -58,7 +58,7 @@ canvas{max-height:300px}
 <div id="app"><div class="load"><div class="spin"></div></div></div><div id="toast"></div>
 <script>
 /* ====== НАЛАШТУВАННЯ: Supabase → Project Settings → API (лише anon/publishable key!) ====== */
-const SUPABASE_URL='PASTE_SUPABASE_URL', SUPABASE_ANON_KEY='PASTE_ANON_KEY';
+const SUPABASE_URL='https://sxsdztxjgnjifwmnbhop.supabase.co', SUPABASE_ANON_KEY='sb_publishable_82NVNz918gLb5NnXHWEKVA_MYWpql3D';
 /* ================================================================================== */
 const $=(s,e=document)=>e.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0,f1=n=>(+n).toFixed(1),dstr=o=>new Date(Date.now()-o*864e5-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10),ld=s=>new Date(new Date(s)-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
