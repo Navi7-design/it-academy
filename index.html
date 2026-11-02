@@ -91,21 +91,38 @@ const cv=(id,h=260)=>`<div style="height:${h}px"><canvas id="${id}"></canvas></d
 const grad=c=>`linear-gradient(135deg,${c},#8B6CFF)`;
 
 /* ---------- старт / авторизація ---------- */
-if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><p class="mut">Вкажіть SUPABASE_URL і SUPABASE_ANON_KEY на початку скрипта в index.html та виконайте schema.sql у Supabase.</p></div></div>'}
+if(SUPABASE_URL.startsWith('PASTE') || SUPABASE_ANON_KEY.startsWith('ВСТАВТЕ_') || SUPABASE_ANON_KEY.startsWith('PASTE')){$('#app').innerHTML='<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><p class="mut">Вкажіть SUPABASE_URL і SUPABASE_ANON_KEY на початку скрипта в index.html та виконайте schema.sql у Supabase.</p></div></div>'}
 else{sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){S.rec=true;recoverView()}});boot()}
 
 function authView(msg,mode='in'){
  charts=[];const reg=mode==='up',rst=mode==='rs';
  $('#app').innerHTML=`<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><p class="mut" style="text-align:center;margin:0 0 14px">${rst?'Відновлення пароля':reg?'Створіть акаунт':'Вхід до кабінету'}</p>
- ${reg?'<label>Ім’я</label><input id="nm" autocomplete="name">':''}<label>Email</label><input id="em" type="email" autocomplete="email">
- ${rst?'':'<label>Пароль</label><input id="pw" type="password" autocomplete="'+(reg?'new':'current')+'-password" placeholder="мінімум 8 символів">'}
+ ${reg?'<label>Ім’я</label><input id="nm" autocomplete="name">':''}<label>Email</label><input id="em" type="email" autocomplete="email" required>
+ ${rst?'':'<label>Пароль</label><input id="pw" type="password" required autocomplete="'+(reg?'new':'current')+'-password" placeholder="мінімум 8 символів">'}
  <div class="err" id="er">${esc(msg||'')}</div>
  <button class="b" style="width:100%;justify-content:center" onclick="${rst?'doReset()':reg?'doReg()':'doLogin()'}">${rst?'Надіслати лист':reg?'Зареєструватись':'Увійти'}</button>
  <p style="text-align:center;margin:14px 0 0" class="mut">${reg||rst?'<span class="link" onclick="authView(0)">Вже є акаунт? Увійти</span>':'<span class="link" onclick="authView(0,\'up\')">Реєстрація</span> · <span class="link" onclick="authView(0,\'rs\')">Забули пароль?</span>'}</p></div></div>`;
  ['em','pw','nm'].forEach(i=>$('#'+i)&&$('#'+i).addEventListener('keydown',e=>e.key==='Enter'&&$('.auth .b').click()))}
 const er=m=>$('#er').textContent=m;
-async function doLogin(){const{error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(error)return er(error.message);await boot(true)}
-async function doReg(){const pw=$('#pw').value;if(pw.length<8)return er('Пароль мінімум 8 символів');const{data,error}=await sb.auth.signUp({email:$('#em').value.trim(),password:pw,options:{data:{name:$('#nm').value.trim()}}});if(error)return er(error.message);if(!data.session)return authView('Перевірте пошту й підтвердіть email, потім увійдіть.');await boot(true,'register')}
+async function doLogin(){
+ const email=$('#em').value.trim(),password=$('#pw').value;
+ if(!email||!/^\S+@\S+\.\S+$/.test(email))return er('Введіть коректну електронну адресу.');
+ if(!password)return er('Введіть пароль.');
+ const{data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error)return er('Не вдалося увійти: '+error.message);
+ if(!data.session)return er('Supabase не створив сесію. Перевірте email і пароль.');
+ await boot(true)
+}
+async function doReg(){
+ const email=$('#em').value.trim(),pw=$('#pw').value,name=$('#nm').value.trim();
+ if(!name)return er('Введіть ім’я.');
+ if(!email||!/^\S+@\S+\.\S+$/.test(email))return er('Введіть коректну електронну адресу.');
+ if(pw.length<8)return er('Пароль має містити щонайменше 8 символів.');
+ const{data,error}=await sb.auth.signUp({email,password:pw,options:{data:{name}}});
+ if(error)return er('Не вдалося зареєструватися: '+error.message);
+ if(!data.session)return authView('Перевірте пошту й підтвердіть email, потім увійдіть.');
+ await boot(true,'register')
+}
 async function doReset(){const{error}=await sb.auth.resetPasswordForEmail($('#em').value.trim(),{redirectTo:location.href.split('#')[0]});er(error?error.message:'Лист для відновлення надіслано ✔')}
 function recoverView(){$('#app').innerHTML=`<div class="auth"><div class="card"><div class="logo">IT ACADEMY</div><label>Новий пароль</label><input id="pw" type="password"><div class="err" id="er"></div><button class="b" style="width:100%;justify-content:center" onclick="newPw()">Зберегти</button></div></div>`}
 async function newPw(){const p=$('#pw').value;if(p.length<8)return er('Мінімум 8 символів');const{error}=await sb.auth.updateUser({password:p});if(error)return er(error.message);S.rec=false;toast('Пароль змінено');boot()}
@@ -209,7 +226,7 @@ ach(){const u=ACH.map(a=>a[2](S.gr,S.goals,S.subs));return[`<h1>Досягнен
 profile(){const gr=S.gr;return[`<h1>Профіль</h1><div class="grid g2"><div class="card"><div class="row" style="flex-wrap:nowrap">${avatar(S.p,64)}<div><b>${esc(S.p.name)}</b><div class="mut">${esc(S.p.email)}</div><div class="mut">З нами з ${new Date(S.p.created_at).toLocaleDateString('uk')}</div></div></div>
  <label>Ім’я</label><input id="pn" value="${esc(S.p.name)}"><label>Колір аватара</label><div class="row" style="flex-wrap:nowrap">${['#5685FF','#8B6CFF','#35D6C5','#ff5c7c','#ffb454'].map(c=>`<div class="av n" style="background:${c};width:34px;height:34px;cursor:pointer;${S.p.avatar===c?'outline:2px solid #fff':''}" onclick="S.p.avatar='${c}';go()"></div>`).join('')}</div><br><button class="b" onclick="saveProf()">Зберегти</button></div>
  <div class="card"><h2>Статистика</h2><p>Оцінок: <b>${gr.length}</b> · Предметів: <b>${S.subs.length}</b></p><p>Середній бал: <b>${f1(avg(gr.map(g=>g.value)))}</b></p><p>Індекс продуктивності: <b>${prodIdx(gr,S.goals)}</b></p><p>Досягнень: <b>${ACH.filter(a=>a[2](gr,S.goals,S.subs)).length}/${ACH.length}</b></p></div></div>`]},
-settings(){return[`<h1>Налаштування</h1><div class="card" style="max-width:460px"><h2>Зміна пароля</h2><label>Новий пароль</label><input id="pw" type="password" autocomplete="new-password"><div class="err" id="er"></div><button class="b" onclick="newPw()">Змінити</button></div><div class="card" style="max-width:460px"><h2>Акаунт</h2><p class="mut">${esc(S.p.email)}</p><button class="b gh" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></div>`]}};
+settings(){return[`<h1>Налаштування</h1><div class="card" style="max-width:460px"><h2>Зміна пароля</h2><label>Новий пароль</label><input id="pw" type="password" required autocomplete="new-password"><div class="err" id="er"></div><button class="b" onclick="newPw()">Змінити</button></div><div class="card" style="max-width:460px"><h2>Акаунт</h2><p class="mut">${esc(S.p.email)}</p><button class="b gh" onclick="logout()"><i data-lucide="log-out"></i>Вийти</button></div>`]}};
 
 function goalsHtml(del){return S.goals.map(g=>{const p=goalP(g,S.gr);return`<div style="margin-bottom:12px"><div class="row" style="flex-wrap:nowrap"><span>${esc(g.title)} <span class="mut">(${g.kind==='avg'?'бал ≥ ':'оцінок: '}${g.target})</span></span><b class="n">${p}%</b>${del?`<button class="b rd sm n" onclick="delGoal('${g.id}')"><i data-lucide="x"></i></button>`:''}</div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('')||'<p class="mut">Цілей поки немає — створіть у розділі «Продуктивність»</p>'}
 function lineChart(id,gr,per){const m=group(gr,g=>bucket(g.date,per)),ks=Object.keys(m).sort();mkChart(id,{type:'line',data:{labels:ks,datasets:[{label:'Середній бал',data:ks.map(k=>+f1(avg(m[k]))),borderColor:'#5685FF',backgroundColor:'#5685ff33',fill:true,tension:.4,pointBackgroundColor:'#35D6C5'}]},options:{scales:{y:{min:0,max:12,ticks:{color:'#8D99B8'},grid:{color:'#ffffff0a'}},x:{ticks:{color:'#8D99B8'},grid:{display:false}}}}})}
