@@ -220,16 +220,6 @@ body[data-theme="dark"] .bar{background:#34394b}
 .chart-empty small{margin-top:3px;color:var(--muted);font-size:9px;opacity:.8}
 body[data-theme="dark"] .chart-empty{background:linear-gradient(145deg,#202536,#1a1d29);border-color:#3a4055}
 
-
-/* Empty-data panels: visible, centered and readable in both themes */
-.chart-empty{width:100%;min-height:230px;height:230px;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px 20px;margin:0;border:1px dashed var(--line);border-radius:12px;background:var(--panel2);text-align:center;box-sizing:border-box}
-.chart-empty-icon{width:46px;height:46px;display:grid;place-items:center;flex:none;border-radius:14px;background:color-mix(in srgb,var(--accent) 13%,var(--panel));color:var(--accent)}
-.chart-empty-icon svg{width:22px;height:22px}
-.chart-empty b{display:block;color:var(--t);font-size:13px;font-weight:800;line-height:1.4}
-.chart-empty p{display:block;max-width:340px;margin:0;color:var(--muted);font-size:11px;line-height:1.65}
-.chart-empty small{display:block;margin-top:2px;color:var(--muted);font-size:9px;opacity:.85}
-body[data-theme="dark"] .chart-empty{background:#202536;border-color:#414960}
-
 </style>
 </head>
 <body>
@@ -269,31 +259,26 @@ const axis={ticks:{color:C.tick},grid:{color:C.grid}};
 function mkChart(id,cfg){
  const c=$('#'+id);if(!c)return;
  const datasets=cfg.data?.datasets||[];
- const labels=cfg.data?.labels||[];
- const values=datasets.flatMap(ds=>Array.isArray(ds.data)?ds.data:[]).map(v=>Number(v)||0);
- const total=values.reduce((a,v)=>a+v,0);
- const positive=values.filter(v=>v>0).length;
- let message=null;
- // Avoid showing technically valid but meaningless charts based on one or zero records.
- if(total===0) message={title:'Поки недостатньо даних',desc:'Коли з’являться нові записи, тут автоматично з’явиться статистика.'};
- if(id==='c1' && positive<2) message={title:'Ще зарано будувати графік',desc:'Для відображення зміни середнього бала потрібні оцінки щонайменше за кілька дат.'};
- if(id==='c2' && positive<2) message={title:'Поки замало даних для порівняння',desc:'Додай оцінки ще з одного предмета — тоді зможемо порівняти результати.'};
- if(id==='c3' && total<3) message={title:'Ще недостатньо оцінок',desc:'Коли буде хоча б кілька оцінок, покажемо їх розподіл за балами.'};
- if(id==='c4' && positive<2) message={title:'Активність ще формується',desc:'Потрібні записи за кілька тижнів, щоб показати динаміку навчальної активності.'};
- if(id==='c5' && datasets.length>1 && datasets.some(ds=>(ds.data||[]).every(v=>!(Number(v)>0)))) message={title:'Ще зарано порівнювати періоди',desc:'Для чесного порівняння потрібні дані і за поточний, і за попередній період.'};
- if(id==='c6' && labels.length===0) message={title:'Цілі ще не додані',desc:'Створи навчальну ціль у розділі «Продуктивність» — тут з’явиться прогрес її виконання.'};
- if(message){
-  const card=c.closest('.card');
-  const title=card?.querySelector('h2')?.textContent||'Статистика';
+ const values=datasets.flatMap(ds=>Array.isArray(ds.data)?ds.data:[]);
+ const hasValues=values.some(v=>Number(v)>0);
+ const hasGoalItems=id==='c6'&&(cfg.data?.labels||[]).length>0;
+ if(!hasValues&&!hasGoalItems){
+  const messages={
+   c1:['Ще недостатньо оцінок','Додай кілька оцінок — і тут з’явиться графік зміни середнього бала.'],
+   c2:['Поки немає оцінок за цей період','Коли з’являться оцінки з предметів, ми покажемо їх порівняння.'],
+   c3:['Ще немає даних для розподілу','Додай оцінки, щоб побачити, яких балів найбільше.'],
+   c4:['Поки немає навчальної активності','Тут відобразиться кількість оцінок за останні тижні.'],
+   c5:['Ще зарано порівнювати періоди','Потрібні оцінки і в поточному, і в попередньому періоді.'],
+   c6:['Цілі ще не створені','Створи навчальну ціль — і тут з’явиться відсоток її виконання.']
+  };
+  const title=(c.closest('.card')?.querySelector('h2')?.textContent||'Статистика');
+  const [head,desc]=messages[id]||['Поки недостатньо даних','Коли з’явиться більше інформації, статистика автоматично відобразиться тут.'];
   const box=document.createElement('div');box.className='chart-empty';
-  box.innerHTML=`<div class="chart-empty-icon"><i data-lucide="chart-no-axes-combined"></i></div><b>${message.title}</b><p>${message.desc}</p><small>${title}</small>`;
-  const holder=c.parentElement;
-  if(holder)holder.replaceWith(box);
-  if(typeof icons==='function')icons();
-  return;
+  box.innerHTML=`<div class="chart-empty-icon"><i data-lucide="chart-no-axes-combined"></i></div><b>${head}</b><p>${desc}</p><small>${title}</small>`;
+  const holder=c.parentElement;holder.replaceWith(box);if(window.lucide)icons();return;
  }
  cfg.options=Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:C.tick}}},scales:cfg.type==='doughnut'?{}:{x:axis,y:Object.assign({beginAtZero:true},axis)}},cfg.options||{});
- charts.push(new Chart(c,cfg));
+ charts.push(new Chart(c,cfg))
 }
 const cv=(id,h=260)=>`<div style="height:${h}px"><canvas id="${id}"></canvas></div>`;
 const grad=c=>`linear-gradient(135deg,${c},${C.b})`;
